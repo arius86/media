@@ -145,7 +145,8 @@ $(document).ready(function() {
                         alertify.error('Undefined problem with uploading files. Please contact administrator.');
                     },
                     onSuccess: function(event, file, upload) {
-                        var id = JSON.parse(event.srcElement.responseText);
+                        var target = event.target || event.srcElement;
+                        var id = JSON.parse(target.responseText);
                         var input = document.createElement('input');
                         input.setAttribute('name', name + '[]');
                         input.setAttribute('type', 'hidden');

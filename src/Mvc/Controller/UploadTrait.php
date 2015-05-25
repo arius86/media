@@ -34,8 +34,15 @@ trait UploadTrait
             $model = $uploadElement->getModel();
 
             $path = $uploadElement->getPath();
+
             $maxFileSize = $uploadElement->getMaxFileSize();
             $minFileSize = $uploadElement->getMinFileSize();
+
+            $allowedExtensions = $uploadElement->getAllowedExtensions();
+            $forbiddenExtensions = $uploadElement->getForbiddenExtensions();
+
+            $allowedMimeTypes = $uploadElement->getAllowedMimeTypes();
+            $forbiddenMimeTypes = $uploadElement->getForbiddenMimeTypes();
 
             foreach ($this->request->getUploadedFiles() as $file) {
                 $fileName = $file->getName();
@@ -43,26 +50,27 @@ trait UploadTrait
                 $fileType = $file->getRealType();
                 $fileExtensions = pathinfo($fileName, PATHINFO_EXTENSION);
 
-                if (!empty($uploadElement->getAllowedExtensions())) {
-                    if (!in_array($fileExtensions, $uploadElement->getAllowedExtensions())) {
+
+                if (!empty($allowedExtensions)) {
+                    if (!in_array($fileExtensions, $allowedExtensions)) {
                         throw new ForbiddenFileExtensionException();
                     }
                 }
 
-                if (!empty($uploadElement->getForbiddenExtensions())) {
-                    if (in_array($fileExtensions, $uploadElement->getForbiddenExtensions())) {
+                if (!empty($forbiddenExtensions)) {
+                    if (in_array($fileExtensions, $forbiddenExtensions)) {
                         throw new ForbiddenFileExtensionException();
                     }
                 }
 
-                if (!empty($uploadElement->getAllowedMimeTypes())) {
-                    if (!in_array($fileType, $uploadElement->getAllowedMimeTypes())) {
+                if (!empty($allowedMimeTypes)) {
+                    if (!in_array($fileType, $allowedMimeTypes)) {
                         throw new ForbiddenFileMimeTypeException();
                     }
                 }
 
-                if (!empty($uploadElement->getForbiddenMimeTypes())) {
-                    if (in_array($fileType, $uploadElement->getForbiddenMimeTypes())) {
+                if (!empty($forbiddenMimeTypes)) {
+                    if (in_array($fileType, $forbiddenMimeTypes)) {
                         throw new ForbiddenFileMimeTypeException();
                     }
                 }
@@ -92,6 +100,7 @@ trait UploadTrait
                 return $this->response->setJsonContent((string) $model->_id);
             }
         }
+
         $this->view->setRenderLevel(View::LEVEL_NO_RENDER);
     }
 

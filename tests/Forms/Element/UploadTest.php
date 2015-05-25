@@ -12,6 +12,7 @@
 
 namespace VegasTest\Forms\Element;
 
+use Phalcon\DI;
 use Vegas\Forms\Element\Upload;
 
 class UploadTest extends \PHPUnit_Framework_TestCase
@@ -194,7 +195,11 @@ class UploadTest extends \PHPUnit_Framework_TestCase
     {
         $name = 'upload';
         $upload = new Upload($name);
-        $output = $upload->render();
-        $this->assertEquals($output, '<input type="file" id="upload" name="upload" vegas-cmf="upload" max-files="1" upload-url="/upload" min-file-size="1B" max-file-size="10MB" browser-type="button" browser-label="Select file" allowed-extensions="" forbidden-extensions="" allowed-mime-types="" forbidden-mime-types="" />');
+        $upload->getDecorator()->setDI(DI::getDefault());
+
+        $this->assertEquals(
+            '<input type="file" id="upload" name="upload" max-files="1" upload-url="/upload" min-file-size="1B" max-file-size="10MB" browser-type="button" browser-label="Select file" allowed-extensions="" forbidden-extensions="" allowed-mime-types="" forbidden-mime-types="" value="" vegas-cmf="upload" />',
+            $upload->renderDecorated()
+        );
     }
 }

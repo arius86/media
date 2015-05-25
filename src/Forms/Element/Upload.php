@@ -13,11 +13,15 @@ namespace Vegas\Forms\Element;
 
 use Phalcon\Forms\Element;
 use Vegas\Forms\Decorator\DecoratedTrait;
+use Vegas\Forms\Decorator;
 use Vegas\Upload\Attributes;
 
 class Upload extends File
 {
     use Attributes;
+    use DecoratedTrait {
+        renderDecorated as private baseRenderDecorated;
+    }
 
     const BROWSER_BUTTON = 'button';
     const BROWSER_DROPZONE = 'dropzone';
@@ -27,15 +31,10 @@ class Upload extends File
     private $uploadUrl = null;
     private $browserLabel = null;
     private $browserType = null;
-    private $name = null;
 
-
-    public function __construct($name)
+    public function __construct($name, $attributes = null)
     {
-        parent::__construct($name);
-
         $this->path = 'files/';
-        $this->name = $name;
         $this->maxFiles = 1;
         $this->uploadUrl = '/upload';
         $this->minFileSize = '1B';
@@ -46,6 +45,12 @@ class Upload extends File
         $this->forbiddenExtensions = [];
         $this->allowedMimeTypes = [];
         $this->forbiddenMimeTypes = [];
+
+        $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'Upload', 'views', '']);
+        $this->setDecorator(new Decorator($templatePath));
+        $this->getDecorator()->setTemplateName('jquery');
+
+        parent::__construct($name, $attributes);
     }
 
     /**
@@ -133,7 +138,7 @@ class Upload extends File
         return $this->browserType;
     }
 
-    public function render($attributes = [])
+    public function renderDecorated($attributes = null)
     {
         $attributes = $this->getAttributes();
 
@@ -141,7 +146,6 @@ class Upload extends File
             $this->setAttribute('data-' . $name, $value);
         }
 
-        $this->setAttribute('vegas-cmf', 'upload');
         $this->setAttribute('max-files', $this->maxFiles);
         $this->setAttribute('upload-url', $this->uploadUrl);
         $this->setAttribute('min-file-size', $this->minFileSize);
@@ -153,6 +157,6 @@ class Upload extends File
         $this->setAttribute('allowed-mime-types', implode(',', $this->allowedMimeTypes));
         $this->setAttribute('forbidden-mime-types', implode(',', $this->forbiddenMimeTypes));
 
-        return parent::render($attributes);
+        return $this->baseRenderDecorated($attributes);
     }
 }

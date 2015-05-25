@@ -11,10 +11,11 @@
  */
 namespace Vegas\Forms\Element;
 
-use \Phalcon\Forms\Element;
+use Phalcon\Forms\Element;
+use Vegas\Forms\Decorator\DecoratedTrait;
 use Vegas\Upload\Attributes;
 
-class Upload extends Element
+class Upload extends File
 {
     use Attributes;
 
@@ -132,26 +133,26 @@ class Upload extends Element
         return $this->browserType;
     }
 
-    public function render($attributes = array())
+    public function render($attributes = [])
     {
         $attributes = $this->getAttributes();
-        $fileElement = new Element\File($this->name);
 
         foreach ($attributes as $name => $value) {
-            $fileElement->setAttribute('data-' . $name, $value);
+            $this->setAttribute('data-' . $name, $value);
         }
 
-        $fileElement->setAttribute('vegas-cmf', 'upload');
-        $fileElement->setAttribute('max-files', $this->maxFiles);
-        $fileElement->setAttribute('upload-url', $this->uploadUrl);
-        $fileElement->setAttribute('min-file-size', $this->minFileSize);
-        $fileElement->setAttribute('max-file-size', $this->maxFileSize);
-        $fileElement->setAttribute('browser-type', $this->browserType);
-        $fileElement->setAttribute('browser-label', $this->browserLabel);
-        $fileElement->setAttribute('allowed-extensions', implode(',', $this->allowedExtensions));
-        $fileElement->setAttribute('forbidden-extensions', implode(',', $this->forbiddenExtensions));
-        $fileElement->setAttribute('allowed-mime-types', implode(',', $this->allowedMimeTypes));
-        $fileElement->setAttribute('forbidden-mime-types', implode(',', $this->forbiddenMimeTypes));
-        return $fileElement->render($attributes);
+        $this->setAttribute('vegas-cmf', 'upload');
+        $this->setAttribute('max-files', $this->maxFiles);
+        $this->setAttribute('upload-url', $this->uploadUrl);
+        $this->setAttribute('min-file-size', $this->minFileSize);
+        $this->setAttribute('max-file-size', $this->maxFileSize);
+        $this->setAttribute('browser-type', $this->browserType);
+        $this->setAttribute('browser-label', $this->browserLabel);
+        $this->setAttribute('allowed-extensions', implode(',', $this->allowedExtensions));
+        $this->setAttribute('forbidden-extensions', implode(',', $this->forbiddenExtensions));
+        $this->setAttribute('allowed-mime-types', implode(',', $this->allowedMimeTypes));
+        $this->setAttribute('forbidden-mime-types', implode(',', $this->forbiddenMimeTypes));
+
+        return parent::render($attributes);
     }
 }

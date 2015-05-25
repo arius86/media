@@ -1,92 +1,135 @@
-#jQuery Uploader
+jQuery Uploader
+==============
+jQuery Uploader library is designed for everybody who wants to implement asynchronous files uploader in his project. It is the only uploader which allows you to configure many details and customize your uploading proces however you want.
 
-The simplest configuration:
 
+Simple configuration
+==============
+Html code:
  ````html
-<script src="/jquery/jquery.js"></script>
-<script src="/jquery-uploader/jquery-uploader.js"></script>
- ````
+<script src="/js/jquery.js"></script> <!-- At least 2.0 version -->
+<script src="/js/jquery-uploader.js"></script>
 
+<input type="file">
+<div id="browser"></div> <!-- File browser element -->
+<div id="preview"></div> <!-- Place where previews will be displayed -->
+ ````
+JavaScript code:
  ````javascript
-$('input[type="file"]').upload({
-   url: '/upload'
+$(document).ready(function() {
+    $('input').upload({
+        browser: {
+            render: function() {
+                var button = document.createElement('button');
+                $(button).text('Select file');
+                $('#browser').html(button);
+                return button;
+            }
+        },
+        preview: {
+            render: function () {
+                var ul = (new Uploader.Html()).getUl(); //same as document.createElement('ul')
+                var li = (new Uploader.Html()).getLi(); //same as document.createElement('li')
+                var div = (new Uploader.Html()).getDiv(); //same as...
+                var upload = (new Uploader.Html()).getButton(); //same as...
+                var cancel = (new Uploader.Html()).getButton(); //...
+                var progress = (new Uploader.Html()).getProgress(); //...
+
+                $(upload).text('Upload file');
+                $(cancel).text('Cancel');
+                $('#preview').html(ul);
+
+                return {
+                    container: ul,
+                    item: li,
+                    preview: div, //order of this property has meaning
+                    progress: progress, //order of this property has meaning
+                    upload: upload, //order of this property has meaning
+                    cancel: cancel //order of this property has meaning
+                };
+            }
+        }
+    });
 });
 ````
 
+Full configuration
+==============
+Html code:
  ````html
-<form enctype="multipart/form-data" action="/javascript.php" method="post">
-    <input type="file" name="file"  multiple="multiple"/>
-    <div data-jq-upload-error></div>
-    <div data-jq-upload-preview></div>
-</form>
-  ````
+<script src="/js/jquery.js"></script> <!-- At least 2.0 version -->
+<script src="/js/jquery-uploader.js"></script>
 
-#jQuery Uploader Options 
+<input type="file">
+<div id="browser"></div> <!-- File browser element -->
+<div id="preview"></div> <!-- Place where previews will be displayed -->
+ ````
+JavaScript code:
  ````javascript
-$('input[type="file"]').upload({
-    url: '/', //The url where the file will be sent to
-    preview: { 
-        selector: '[data-jq-upload-preview]', //Selector of item where preview will be displayed
-        container: '[data-jq-upload-preview-stored]',
-        width: 400, //Width of preview image
-        height: 200 //Height or preview image
-    },
-    trigger: {
-        type: 'button', //Available options ['button', 'dropzone']
-        attributes: {                                   // ['id', 'class', 'style'...]
-            id: 'button-id', //Trigger id attribute 
-            class: 'button-class', //Trigger class attribute
-            style: 'width:100px' //Trigger style attribute
-            ... //You can add whatever attribute you want to
-        }
-    },
-    selectFileText: 'Select file from your hard drive', //Text displayed inside button or dropzone
-    timeout: 8000, //Timeout of ajax request
-    maxFiles: 4, //Max available number of uploaded files
-    maxSize: '80000000', //Max size of single file in bytes
-    allowedMimeTypes: ['image/jpeg'], //Allowed mimetypes of uploaded files
-    allowedExtensions: ['jpg'], //Allowed extensions of uploaded files
-    error: {
-        selector: '[data-jq-upload-error]', //Selector where errors will be set when appear
-        attributes: { //Attributes of error html element
-            style: 'border:1px solid red; color:red;'
-            ... //You can add whatever attribute you want to
-        }
-    },
-    buttons: { 
-        upload: {
-            text: 'Upload a file' //Text of upload button,
-            attributes: {
-                id: 'button-upload-id',
-                class: 'button-upload-class',
-                ... //You can add whatever attribute you want to
+$(document).ready(function() {
+    $('input').upload({
+        browser: {
+            render: function() {
+                var button = document.createElement('button');
+                $(button).text('Select file');
+                $('#browser').html(button);
+                return button;
             },
-            onClick: function(event, config) {} //It will be trigered on click for upload button
+            onDrop: function(htmlElement, event) {},
+            onClick: function(htmlElement, event) {},
+            onDragOver: function(htmlElement, event) {},
+            onDragEnter: function(htmlElement, event) {},
+            onDragLeave: function(htmlElement, event) {}
         },
-        cancel: {
-            text: 'Remove a file' //Text of remove button,
-            attributes: {
-                id: 'button-cancel-id',
-                class: 'button-cancel-class',
-                ... //You can add whatever attribute you want to
+        preview: {
+            render: function () {
+                var ul = (new Uploader.Html()).getUl(); //same as document.createElement('ul')
+                var li = (new Uploader.Html()).getLi(); //same as document.createElement('li')
+                var div = (new Uploader.Html()).getDiv(); //same as...
+                var upload = (new Uploader.Html()).getButton(); //same as...
+                var cancel = (new Uploader.Html()).getButton(); //...
+                var progress = (new Uploader.Html()).getProgress(); //...
+
+                $(upload).text('Upload file');
+                $(cancel).text('Cancel');
+                $('#preview').html(ul);
+
+                return {
+                    container: ul,
+                    item: li,
+                    preview: div, //order of this property has meaning
+                    progress: progress, //order of this property has meaning
+                    upload: upload, //order of this property has meaning
+                    cancel: cancel //order of this property has meaning
+                };
             },
-            onClick: function(event, config) {} //It will be trigered on click for cancel button.
-        },
-        uploadAll: {
-            text: 'Upload all files',
-            attributes: {
-                class: 'btn btn-form-submit'
+            maxFiles: 4,
+            minFileSize: '1KB',
+            maxFileSize: '10MB',
+            allowedMimeTypes: ['image/jpeg', 'image/png'],
+            allowedExtensions: ['jpg', 'png'],
+            forbiddenMimeTypes: ['application/pdf'],
+            forbiddenExtensions: ['pdf'],
+            errorMessages: {
+                forbidden: 'You cannot select forbidden file.',
+                tooLargeFile: 'Your file is too large.',
+                tooSmallFile: 'Your file is too small.',
+                tooManyFiles: 'You cannot upload more files.'
+            },
+            error: function(message) {
+                alert(message);
+            },
+            upload: {
+                url: '/upload',
+                onLoad: function(event, file, upload) {},
+                onAbort: function(event, file, upload) {},
+                onError: function(event, file, upload) {},
+                onLoadEnd: function(event, file, upload) {},
+                onTimeout: function(event, file, upload) {},
+                onProgress: function(event, file, upload) {},
+                onLoadStart: function(event, file, upload) {}
             }
-        }       
-    },
-    upload: {
-        onAbort: function(event, config) {}, //Function that is triggered when request is aborted
-        onError: function(event, config) {}, //Function that is triggered when request upload failed
-        onTimeout: function(event, config) {}, //Function that is triggered after timeout
-        onSuccess: function(event, config) {}, //Function that is triggered after successfully uploading
-        onLoadEnd: function(event, config) {}, //Function that is triggered when request is finished
-        onProgress: function(event, config) {}, //Function that is triggered during upload 
-        onLoadStart: function(event, config) {} //Function that is triggered when upload starts
-    }
+        }
+    });
 });
 ````

@@ -198,7 +198,7 @@ class UploadTest extends \PHPUnit_Framework_TestCase
         $upload->getDecorator()->setDI(DI::getDefault());
 
         $this->assertEquals(
-            '<input type="file" id="upload" name="upload" max-files="1" upload-url="/upload" min-file-size="1B" max-file-size="10MB" browser-type="button" browser-label="Select file" allowed-extensions="" forbidden-extensions="" allowed-mime-types="" forbidden-mime-types="" value="" vegas-cmf="upload" />',
+            '<input type="file" id="upload" name="upload" max-files="1" upload-url="/upload" min-file-size="1B" max-file-size="10MB" browser-type="button" browser-label="Select file" allowed-extensions="" forbidden-extensions="" allowed-mime-types="" forbidden-mime-types="" vegas-cmf="upload" />',
             $upload->renderDecorated()
         );
     }

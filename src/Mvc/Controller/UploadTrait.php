@@ -11,12 +11,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Vegas\Upload;
+namespace Vegas\Mvc\Controller;
 
 use Vegas\Upload\Exception\ForbiddenFileExtensionException;
 use Vegas\Upload\Exception\ForbiddenFileMimeTypeException;
 
-trait Upload
+trait UploadTrait
 {
     /**
      * Upload action for every controller which inherit from CRUDController

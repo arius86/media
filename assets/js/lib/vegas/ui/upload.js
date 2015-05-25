@@ -1,7 +1,6 @@
 $(document).ready(function() {
     $('[vegas-cmf="upload"]').each(function() {
         var name = $(this).attr('name');
-        $(this).removeAttr('name');
         var that = $(this);
         var render = null;
 

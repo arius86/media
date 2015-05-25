@@ -16,7 +16,7 @@ use Vegas\Forms\Decorator\DecoratedTrait;
 use Vegas\Forms\Decorator;
 use Vegas\Upload\Attributes;
 
-class Upload extends File
+class Upload extends File implements Decorator\DecoratedInterface
 {
     use Attributes;
     use DecoratedTrait {
